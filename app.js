@@ -41,7 +41,8 @@ var luisAppId = process.env.LuisAppId;
 var luisAPIKey = process.env.LuisAPIKey;
 var luisAPIHostName = process.env.LuisAPIHostName || 'westus.api.cognitive.microsoft.com';
 
-const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
+//const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' + luisAppId + '&subscription-key=' + luisAPIKey;
+const LuisModelUrl = 'https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/9261e399-d445-4d44-b7f4-a0d79ec75c1f?subscription-key=9275fe239b584be3a66479224467dd5f&verbose=true&timezoneOffset=0';
 
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
@@ -50,7 +51,7 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send('You reached Greeting intent, you said \'%s\'.', session.message.text);
 })
 .matches('Help', (session) => {
-    session.send('You reached Help intent, you said \'%s\'.', session.message.text);
+    session.send('You reached Helps intent, you said \'%s\'.', session.message.text);
 })
 .matches('Cancel', (session) => {
     session.send('You reached Cancel intent, you said \'%s\'.', session.message.text);
