@@ -3,8 +3,8 @@ A simple echo bot for the Microsoft Bot Framework.
 -----------------------------------------------------------------------------*/
 
 var dt = require('./data.js');
-var $ = require('jquery');
-
+var $ = require('jQuery');
+var getJSON = require('get-json');
 var cardObj = require('./card.js');
 var weathercardObj = require('./weathercard.js');
 
@@ -75,13 +75,7 @@ var config =
    }
 
 
-    var city = "Bangalore";
-    var searchtext = "select item.condition from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + city + "') and u='c'"
-    //change city variable dynamically as required
-    $.getJSON("https://query.yahooapis.com/v1/public/yql?q=" + searchtext + "&format=json").success(function(data){
-     console.log(data);
-     $('#temp').html("Temperature in " + city + " is " + data.query.results.channel.item.condition.temp + "°C");
-    });
+   
   
 
    //User Authentication
@@ -98,6 +92,11 @@ var authCtx = new AuthenticationContext(settings.url);
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
+
+.matches('GetWeather', (session) => {
+    session.beginDialog('/GetWeather');
+})
+
 .matches('Greeting', (session) => {
     session.beginDialog('/Greetings');
 })
@@ -200,9 +199,7 @@ bot.dialog('/Help', function(session) {
                     session.beginDialog('/ProcessInteraction');
                   
                 
-                    var msg = new builder.Message(session)
-                        .addAttachment(weathercardObj.weatherCard("55"));
-                    session.send(msg);
+                   
 
 
 
@@ -376,3 +373,25 @@ function CreateLeaveRequestInSharePoint(LeaveDetails, fn) {
             });
     });
 }
+
+
+
+//Weather
+bot.dialog('/GetWeather', [
+   
+    function(session, args) {
+        var city = "FishKill";
+        var searchtext = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='"+city+", ak')"
+        //change city variable dynamically as required
+    
+        getJSON("https://query.yahooapis.com/v1/public/yql?q=" + searchtext + "&format=json", function(error, response){
+     
+            var data = response.query.results;
+            var msg = new builder.Message(session)
+            .addAttachment(weathercardObj.weatherCard("55"));
+        session.send(msg);
+        })
+    
+    }
+
+]);
