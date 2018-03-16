@@ -1,4 +1,11 @@
-exports.weatherCard = function (temp) {
+
+exports.weatherCard = function (imagecode,temp,high,low,city,region,text) {
+  var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  var today  = new Date();
+
+  
+
+
     var wcard = {
         'contentType': 'application/vnd.microsoft.card.adaptive',
         'content': {
@@ -9,13 +16,13 @@ exports.weatherCard = function (temp) {
     "body": [
       {
         "type": "TextBlock",
-        "text": "Seattle, WA",
+        "text": "'"+city+"', '"+region+"'",
         "size": "large",
         "isSubtle": true
       },
       {
         "type": "TextBlock",
-        "text": "September 18, 7:30 AM",
+        "text": today.toLocaleDateString("en-US",options),
         "spacing": "none"
       },
       {
@@ -23,51 +30,49 @@ exports.weatherCard = function (temp) {
         "columns": [
           {
             "type": "Column",
+           
             "width": "auto",
             "items": [
               {
                 "type": "Image",
-                "url": "http://messagecardplayground.azurewebsites.net/assets/Mostly%20Cloudy-Square.png",
+                "url": "http://l.yimg.com/a/i/us/we/52/"+imagecode+".gif",
+                "size": "small",
+                "text":text
+              },
+              {
+                "type": "TextBlock",
+                "text":text,
                 "size": "small"
+                
               }
             ]
           },
+         
           {
             "type": "Column",
             "width": "auto",
             "items": [
               {
                 "type": "TextBlock",
-                "text": temp,
+                "text": temp +" °F",
                 "size": "extraLarge",
                 "spacing": "none"
               }
             ]
           },
+          
           {
             "type": "Column",
-            "width": "stretch",
+            "width": "auto",
             "items": [
               {
                 "type": "TextBlock",
-                "text": "°F",
-                "weight": "bolder",
-                "spacing": "small"
-              }
-            ]
-          },
-          {
-            "type": "Column",
-            "width": "stretch",
-            "items": [
-              {
-                "type": "TextBlock",
-                "text": "Hi 51",
+                "text": "Hi "+high+"",
                 "horizontalAlignment": "left"
               },
               {
                 "type": "TextBlock",
-                "text": "Lo 40",
+                "text": "Lo "+low+"",
                 "horizontalAlignment": "left",
                 "spacing": "none"
               }
